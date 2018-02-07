@@ -8,7 +8,7 @@ import pytesseract
 import ImageHelper
 import unittest
 import os
-import subprocess
+import configparser
 
 global TolerableValue
 TolerableValue=3.2
@@ -17,15 +17,18 @@ class Student_Overdraw(unittest.TestCase):
     # 家长端 - 可以
     @classmethod
     def setUpClass(self):
+
+        #读取配置文件
+        cf = configparser.ConfigParser()
+        cf.read("config.conf")
         # 配置信息，后期变成可更改的,并增加爬虫安装部分
         desired_caps = {}
-        desired_caps['platformName'] = 'Android'
-        desired_caps['platformVersion'] = '4.4'
-        desired_caps['deviceName'] = 'S8S4NNC6OJVSORKR'
-        desired_caps['appPackage'] = 'com.A17zuoye.mobile.homework'
-        desired_caps['appActivity'] = 'com.A17zuoye.mobile.homework.main.activity.WelcomeActivity'
+        desired_caps['platformName'] = cf.get('device', 'platformName')
+        desired_caps['platformVersion'] = cf.get('device', 'platformVersion')
+        desired_caps['deviceName'] = cf.get('device', 'deviceName')
+        desired_caps['appPackage'] = cf.get('packageinfo', 'studentPackage')
+        desired_caps['appActivity'] = cf.get('packageinfo', 'studentActivity')
         global driver
-        driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 
 
 

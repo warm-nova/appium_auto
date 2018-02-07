@@ -10,6 +10,7 @@ from PIL import Image
 import HtmlTestRunner
 import AipOcr
 import subprocess
+import configparser
 
 #超过层级大于此，则报错
 global TolerableValue
@@ -21,12 +22,15 @@ class Teacher_Overdraw(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         # 配置信息，后期变成可更改的,并增加爬虫安装部分
+        cf = configparser.ConfigParser()
+        cf.read("config.conf")
+
         desired_caps = {}
-        desired_caps['platformName'] = 'Android'
-        desired_caps['platformVersion'] = '4.4'
-        desired_caps['deviceName'] = 'S8S4NNC6OJVSORKR'
-        desired_caps['appPackage'] = 'com.yiqizuoye.teacher'
-        desired_caps['appActivity'] = '.login.TeacherWelcomeActivity'
+        desired_caps['platformName'] = cf.get('device', 'platformName')
+        desired_caps['platformVersion'] = cf.get('device', 'platformVersion')
+        desired_caps['deviceName'] = cf.get('device', 'deviceName')
+        desired_caps['appPackage'] = cf.get('packageinfo', 'teacherPackage')
+        desired_caps['appActivity'] = cf.get('packageinfo', 'teacherActivity')
         global driver
         driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 
